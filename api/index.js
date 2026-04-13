@@ -4,6 +4,10 @@ const cors = require('cors');
 // Set env vars for Vercel
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'gym_app_secret_key_change_in_production_2024';
 
+// Make pg available globally so backend/src/config/database.js can find it
+// (Vercel bundles root node_modules but backend/node_modules may not be available)
+global.__pg = require('pg');
+
 const sequelize = require('../backend/src/config/database');
 require('../backend/src/models');
 
