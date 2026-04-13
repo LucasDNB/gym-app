@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Dumbbell, Users, ClipboardList, MessageSquare, LogOut, Menu, X, Home, Settings } from 'lucide-react';
+import { Dumbbell, Users, ClipboardList, MessageSquare, LogOut, Menu, X, Home, Timer } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Layout({ children }) {
@@ -13,8 +13,10 @@ export default function Layout({ children }) {
 
   const navItems = [
     { to: '/', label: 'Inicio', icon: Home, roles: ['admin', 'trainer', 'user'] },
-    { to: '/exercises', label: 'Ejercicios', icon: Dumbbell, roles: ['admin', 'trainer', 'user'] },
-    { to: '/routines', label: 'Rutinas', icon: ClipboardList, roles: ['admin', 'trainer', 'user'] },
+    { to: '/exercises', label: 'Ejercicios', icon: Dumbbell, roles: ['admin', 'trainer'] },
+    { to: '/routines', label: 'Mi Rutina', icon: ClipboardList, roles: ['user'] },
+    { to: '/routines', label: 'Rutinas', icon: ClipboardList, roles: ['admin', 'trainer'] },
+    { to: '/timer', label: 'Timer', icon: Timer, roles: ['admin', 'trainer', 'user'] },
     { to: '/comments', label: 'Mensajes', icon: MessageSquare, roles: ['admin', 'trainer', 'user'] },
     { to: '/users', label: 'Usuarios', icon: Users, roles: ['admin', 'trainer'] },
   ];

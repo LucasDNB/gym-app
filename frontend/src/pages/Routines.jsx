@@ -23,8 +23,10 @@ export default function Routines() {
 
   const [form, setForm] = useState({
     name: '', description: '', isTemplate: false, assignedTo: '',
-    days: [{ dayName: 'Lunes', dayOrder: 0, exercises: [] }],
+    days: [{ dayName: 'Lunes', dayOrder: 0, exercises: [], wodType: '', wodContent: '', wodTimecap: '', wodRounds: '' }],
   });
+
+  const wodTypes = ['AMRAP', 'EMOM', 'For Time', 'Tabata', 'Chipper', 'RFT (Rounds For Time)', 'Otro'];
 
   useEffect(() => { loadRoutines(); loadExercises(); if (canEdit) loadUsers(); }, []);
 
@@ -37,7 +39,7 @@ export default function Routines() {
   const addDay = () => {
     const usedDays = form.days.map(d => d.dayName);
     const next = dayNames.find(d => !usedDays.includes(d)) || `Día ${form.days.length + 1}`;
-    setForm({ ...form, days: [...form.days, { dayName: next, dayOrder: form.days.length, exercises: [] }] });
+    setForm({ ...form, days: [...form.days, { dayName: next, dayOrder: form.days.length, exercises: [], wodType: '', wodContent: '', wodTimecap: '', wodRounds: '' }] });
   };
 
   const removeDay = (idx) => {
@@ -90,6 +92,7 @@ export default function Routines() {
       assignedTo: routine.assignedTo || '',
       days: routine.days.map(d => ({
         dayName: d.dayName, dayOrder: d.dayOrder,
+        wodType: d.wodType || '', wodContent: d.wodContent || '', wodTimecap: d.wodTimecap || '', wodRounds: d.wodRounds || '',
         exercises: d.exercises.map(ex => ({
           exerciseId: ex.exerciseId, sets: ex.sets, reps: ex.reps, weight: ex.weight || 0,
           restSeconds: ex.restSeconds, order: ex.order, notes: ex.notes || ''
@@ -102,7 +105,7 @@ export default function Routines() {
   const resetBuilder = () => {
     setShowBuilder(false);
     setEditing(null);
-    setForm({ name: '', description: '', isTemplate: false, assignedTo: '', days: [{ dayName: 'Lunes', dayOrder: 0, exercises: [] }] });
+    setForm({ name: '', description: '', isTemplate: false, assignedTo: '', days: [{ dayName: 'Lunes', dayOrder: 0, exercises: [], wodType: '', wodContent: '', wodTimecap: '', wodRounds: '' }] });
   };
 
   const deleteRoutine = async (id) => {
@@ -286,6 +289,17 @@ export default function Routines() {
                 {routine.days?.sort((a, b) => a.dayOrder - b.dayOrder).map(day => (
                   <div key={day.id}>
                     <h4 className="font-semibold text-indigo-700 mb-2 text-base">{day.dayName}</h4>
+                    {day.wodType && (
+                      <div className="mb-3 bg-orange-50 border border-orange-200 rounded-lg p-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-bold bg-orange-500 text-white rounded px-2 py-0.5">WOD</span>
+                          <span className="text-sm font-semibold text-orange-800">{day.wodType}</span>
+                          {day.wodTimecap && <span className="text-xs text-orange-600">Time Cap: {day.wodTimecap} min</span>}
+                          {day.wodRounds && <span className="text-xs text-orange-600">Rondas: {day.wodRounds}</span>}
+                        </div>
+                        {day.wodContent && <pre className="text-sm text-orange-900 whitespace-pre-wrap font-sans mt-1">{day.wodContent}</pre>}
+                      </div>
+                    )}
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
@@ -402,6 +416,53 @@ export default function Routines() {
                         <button type="button" onClick={() => removeDay(dayIdx)} className="text-red-500 hover:bg-red-50 p-1 rounded">
                           <Trash2 size={16} />
                         </button>
+                      )}
+                    </div>
+
+                    {/* WOD Section */}
+                    <div className="mb-3 border border-orange-200 rounded-lg p-3 bg-orange-50/50">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-bold bg-orange-500 text-white rounded px-2 py-0.5">WOD</span>
+                        <span className="text-xs text-gray-500">CrossFit (opcional)</span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+                        <div>
+                          <label className="text-xs text-gray-500">Tipo</label>
+                          <select value={day.wodType || ''} onChange={e => {
+                            const days = [...form.days];
+                            days[dayIdx].wodType = e.target.value;
+                            setForm({ ...form, days });
+                          }} className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-orange-400 outline-none">
+                            <option value="">Sin WOD</option>
+                            {wodTypes.map(w => <option key={w} value={w}>{w}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500">Time Cap (min)</label>
+                          <input type="number" value={day.wodTimecap || ''} onChange={e => {
+                            const days = [...form.days];
+                            days[dayIdx].wodTimecap = e.target.value ? parseInt(e.target.value) : '';
+                            setForm({ ...form, days });
+                          }} className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm text-center focus:ring-2 focus:ring-orange-400 outline-none" placeholder="-" />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500">Rondas</label>
+                          <input type="number" value={day.wodRounds || ''} onChange={e => {
+                            const days = [...form.days];
+                            days[dayIdx].wodRounds = e.target.value ? parseInt(e.target.value) : '';
+                            setForm({ ...form, days });
+                          }} className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm text-center focus:ring-2 focus:ring-orange-400 outline-none" placeholder="-" />
+                        </div>
+                      </div>
+                      {day.wodType && (
+                        <div>
+                          <label className="text-xs text-gray-500">Descripción del WOD</label>
+                          <textarea value={day.wodContent || ''} onChange={e => {
+                            const days = [...form.days];
+                            days[dayIdx].wodContent = e.target.value;
+                            setForm({ ...form, days });
+                          }} rows={3} placeholder="Ej: 21-15-9&#10;Thrusters (43/30 kg)&#10;Pull-ups" className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-orange-400 outline-none" />
+                        </div>
                       )}
                     </div>
 

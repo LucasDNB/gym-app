@@ -15,6 +15,10 @@ const RoutineDay = sequelize.define('RoutineDay', {
   dayName: { type: DataTypes.STRING, allowNull: false },
   dayOrder: { type: DataTypes.INTEGER, allowNull: false },
   routineId: { type: DataTypes.INTEGER, allowNull: false },
+  wodType: { type: DataTypes.STRING, allowNull: true },
+  wodContent: { type: DataTypes.TEXT, allowNull: true },
+  wodTimecap: { type: DataTypes.INTEGER, allowNull: true },
+  wodRounds: { type: DataTypes.INTEGER, allowNull: true },
 });
 
 const RoutineExercise = sequelize.define('RoutineExercise', {

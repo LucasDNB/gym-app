@@ -59,7 +59,7 @@ router.post('/', authenticate, authorize('admin', 'trainer'), async (req, res) =
 
     if (days && days.length > 0) {
       for (const day of days) {
-        const routineDay = await RoutineDay.create({ dayName: day.dayName, dayOrder: day.dayOrder, routineId: routine.id });
+        const routineDay = await RoutineDay.create({ dayName: day.dayName, dayOrder: day.dayOrder, routineId: routine.id, wodType: day.wodType, wodContent: day.wodContent, wodTimecap: day.wodTimecap, wodRounds: day.wodRounds });
         if (day.exercises && day.exercises.length > 0) {
           for (const ex of day.exercises) {
             await RoutineExercise.create({ routineDayId: routineDay.id, exerciseId: ex.exerciseId, sets: ex.sets, reps: ex.reps, weight: ex.weight, restSeconds: ex.restSeconds, order: ex.order, notes: ex.notes });
@@ -85,7 +85,7 @@ router.post('/:id/assign', authenticate, authorize('admin', 'trainer'), async (r
     const routine = await Routine.create({ name: name || template.name, description: template.description, isTemplate: false, createdBy: req.user.id, assignedTo });
 
     for (const day of template.days) {
-      const newDay = await RoutineDay.create({ dayName: day.dayName, dayOrder: day.dayOrder, routineId: routine.id });
+      const newDay = await RoutineDay.create({ dayName: day.dayName, dayOrder: day.dayOrder, routineId: routine.id, wodType: day.wodType, wodContent: day.wodContent, wodTimecap: day.wodTimecap, wodRounds: day.wodRounds });
       for (const ex of day.exercises) {
         await RoutineExercise.create({ routineDayId: newDay.id, exerciseId: ex.exerciseId, sets: ex.sets, reps: ex.reps, weight: ex.weight, restSeconds: ex.restSeconds, order: ex.order, notes: ex.notes });
       }
@@ -110,7 +110,7 @@ router.put('/:id', authenticate, authorize('admin', 'trainer'), async (req, res)
     if (days) {
       await RoutineDay.destroy({ where: { routineId: routine.id } });
       for (const day of days) {
-        const routineDay = await RoutineDay.create({ dayName: day.dayName, dayOrder: day.dayOrder, routineId: routine.id });
+        const routineDay = await RoutineDay.create({ dayName: day.dayName, dayOrder: day.dayOrder, routineId: routine.id, wodType: day.wodType, wodContent: day.wodContent, wodTimecap: day.wodTimecap, wodRounds: day.wodRounds });
         if (day.exercises && day.exercises.length > 0) {
           for (const ex of day.exercises) {
             await RoutineExercise.create({ routineDayId: routineDay.id, exerciseId: ex.exerciseId, sets: ex.sets, reps: ex.reps, weight: ex.weight, restSeconds: ex.restSeconds, order: ex.order, notes: ex.notes });
