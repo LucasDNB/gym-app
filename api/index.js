@@ -3,7 +3,6 @@ const cors = require('cors');
 
 // Set env vars for Vercel
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'gym_app_secret_key_change_in_production_2024';
-process.env.DB_PATH = process.env.DB_PATH || '/tmp/database.sqlite';
 
 const sequelize = require('../backend/src/config/database');
 require('../backend/src/models');
