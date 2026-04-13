@@ -1,0 +1,13 @@
+{
+  "name": "GymApp - Entrenamiento",
+  "short_name": "GymApp",
+  "description": "App de entrenamiento personalizado",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4338ca",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
