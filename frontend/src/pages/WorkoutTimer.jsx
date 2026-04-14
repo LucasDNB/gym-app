@@ -205,7 +205,7 @@ export default function WorkoutTimer() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Timer de Entrenamiento</h1>
+        <h1 className="text-2xl font-bold text-brand-green-700">Timer de Entrenamiento</h1>
         <button onClick={() => setSoundEnabled(!soundEnabled)} className="p-2 rounded-lg hover:bg-gray-100">
           {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} className="text-gray-400" />}
         </button>
@@ -216,7 +216,7 @@ export default function WorkoutTimer() {
         {Object.entries(PRESETS).map(([key, val]) => (
           <button key={key} onClick={() => selectPreset(key)}
             className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors border ${
-              preset === key ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-300'
+              preset === key ? 'bg-brand-green-500 text-white border-indigo-600' : 'bg-white text-gray-700 border-brand-cream-dark hover:border-indigo-300'
             }`}>
             {val.name}
           </button>
@@ -257,7 +257,7 @@ export default function WorkoutTimer() {
           </button>
         ) : phase === 'finished' ? (
           <button onClick={reset}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-indigo-700 transition-colors shadow-lg">
+            className="flex items-center gap-2 bg-brand-green-500 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-brand-green-600 transition-colors shadow-lg">
             <RotateCcw size={24} /> Reiniciar
           </button>
         ) : (
@@ -281,7 +281,7 @@ export default function WorkoutTimer() {
       </div>
 
       {/* Config panel */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+      <div className="bg-white rounded-xl shadow-sm border border-brand-cream-dark p-5">
         <button onClick={() => setShowConfig(!showConfig)} className="flex items-center gap-2 text-sm font-medium text-gray-700 w-full">
           <Settings size={16} /> Configuración
           <span className="ml-auto text-xs text-gray-400">{config.description}</span>
@@ -293,31 +293,31 @@ export default function WorkoutTimer() {
               <label className="block text-xs font-medium text-gray-500 mb-1">Trabajo (seg)</label>
               <input type="number" value={config.work} min={0}
                 onChange={e => { setConfig({ ...config, work: parseInt(e.target.value) || 0 }); reset(); }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 outline-none" />
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-brand-green-500 outline-none" />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Descanso (seg)</label>
               <input type="number" value={config.rest} min={0}
                 onChange={e => { setConfig({ ...config, rest: parseInt(e.target.value) || 0 }); reset(); }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 outline-none" />
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-brand-green-500 outline-none" />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Rondas</label>
               <input type="number" value={config.rounds} min={1}
                 onChange={e => { setConfig({ ...config, rounds: parseInt(e.target.value) || 1 }); reset(); }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 outline-none" />
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-brand-green-500 outline-none" />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Series</label>
               <input type="number" value={config.sets} min={1}
                 onChange={e => { setConfig({ ...config, sets: parseInt(e.target.value) || 1 }); reset(); }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 outline-none" />
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-brand-green-500 outline-none" />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Preparación (seg)</label>
               <input type="number" value={config.prepTime} min={0}
                 onChange={e => { setConfig({ ...config, prepTime: parseInt(e.target.value) || 0 }); reset(); }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-indigo-500 outline-none" />
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-brand-green-500 outline-none" />
             </div>
           </div>
         )}

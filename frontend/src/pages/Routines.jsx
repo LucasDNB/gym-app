@@ -157,7 +157,7 @@ export default function Routines() {
         head: [['Ejercicio', 'Series', 'Reps', 'Peso', 'Mi Peso', 'Descanso', 'Notas']],
         body: rows,
         theme: 'striped',
-        headStyles: { fillColor: [79, 70, 229] },
+        headStyles: { fillColor: [46, 125, 50] },
         margin: { left: 14 },
       });
       y = doc.lastAutoTable.finalY + 10;
@@ -206,10 +206,10 @@ export default function Routines() {
   return (
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Rutinas</h1>
+        <h1 className="text-2xl font-bold text-brand-green-700">Rutinas</h1>
         {canEdit && (
           <button onClick={() => { resetBuilder(); setShowBuilder(true); }}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+            className="flex items-center gap-2 bg-brand-green-500 text-white px-4 py-2 rounded-lg hover:bg-brand-green-600 transition-colors">
             <Plus size={18} /> Nueva Rutina
           </button>
         )}
@@ -219,12 +219,12 @@ export default function Routines() {
       <div className="space-y-4">
         {routines.map((routine) => (
           <div key={routine.id} id={`routine-card-${routine.id}`}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            className="bg-white rounded-xl shadow-sm border border-brand-cream-dark overflow-hidden">
             <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer"
               onClick={() => setExpandedRoutine(expandedRoutine === routine.id ? null : routine.id)}>
               <div className="flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-semibold text-gray-900 text-lg">{routine.name}</h3>
+                  <h3 className="font-semibold text-brand-green-700 text-lg">{routine.name}</h3>
                   {routine.isTemplate && <span className="text-xs bg-amber-100 text-amber-700 rounded-full px-2 py-0.5">Plantilla</span>}
                 </div>
                 {routine.description && <p className="text-sm text-gray-500 mt-1">{routine.description}</p>}
@@ -240,11 +240,11 @@ export default function Routines() {
                   <button onClick={(e) => e.stopPropagation()} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
                     <Download size={18} />
                   </button>
-                  <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-1 hidden group-hover:block z-10 min-w-[200px]">
+                  <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-brand-cream-dark py-1 hidden group-hover:block z-10 min-w-[200px]">
                     <p className="px-3 py-1 text-xs font-medium text-gray-400 uppercase">Semana completa</p>
-                    <button onClick={(e) => { e.stopPropagation(); exportPDF(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50"><FileText size={14} /> PDF</button>
-                    <button onClick={(e) => { e.stopPropagation(); exportExcel(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50"><Table size={14} /> Excel</button>
-                    <button onClick={(e) => { e.stopPropagation(); exportJPG(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50"><Image size={14} /> JPG</button>
+                    <button onClick={(e) => { e.stopPropagation(); exportPDF(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><FileText size={14} /> PDF</button>
+                    <button onClick={(e) => { e.stopPropagation(); exportExcel(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><Table size={14} /> Excel</button>
+                    <button onClick={(e) => { e.stopPropagation(); exportJPG(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><Image size={14} /> JPG</button>
                     {routine.days?.length > 0 && (
                       <>
                         <hr className="my-1" />
@@ -253,9 +253,9 @@ export default function Routines() {
                           <div key={day.id} className="px-3 py-1">
                             <p className="text-xs font-medium text-gray-600 mb-1">{day.dayName}</p>
                             <div className="flex gap-1 ml-2">
-                              <button onClick={(e) => { e.stopPropagation(); exportPDF(routine, day.dayName); }} className="text-xs text-indigo-600 hover:underline">PDF</button>
+                              <button onClick={(e) => { e.stopPropagation(); exportPDF(routine, day.dayName); }} className="text-xs text-brand-green-500 hover:underline">PDF</button>
                               <span className="text-gray-300">|</span>
-                              <button onClick={(e) => { e.stopPropagation(); exportExcel(routine, day.dayName); }} className="text-xs text-indigo-600 hover:underline">Excel</button>
+                              <button onClick={(e) => { e.stopPropagation(); exportExcel(routine, day.dayName); }} className="text-xs text-brand-green-500 hover:underline">Excel</button>
                             </div>
                           </div>
                         ))}
@@ -271,7 +271,7 @@ export default function Routines() {
                         <Copy size={18} />
                       </button>
                     )}
-                    <button onClick={(e) => { e.stopPropagation(); startEdit(routine); }} className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg">
+                    <button onClick={(e) => { e.stopPropagation(); startEdit(routine); }} className="p-2 text-brand-green-500 hover:bg-brand-green-50 rounded-lg">
                       <Edit2 size={18} />
                     </button>
                     <button onClick={(e) => { e.stopPropagation(); deleteRoutine(routine.id); }} className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
@@ -285,10 +285,10 @@ export default function Routines() {
 
             {/* Expanded routine detail */}
             {(expandedRoutine === routine.id || exportRoutine === routine.id) && (
-              <div className="border-t border-gray-200 p-4 sm:p-5 space-y-4" ref={routineRef}>
+              <div className="border-t border-brand-cream-dark p-4 sm:p-5 space-y-4" ref={routineRef}>
                 {routine.days?.sort((a, b) => a.dayOrder - b.dayOrder).map(day => (
                   <div key={day.id}>
-                    <h4 className="font-semibold text-indigo-700 mb-2 text-base">{day.dayName}</h4>
+                    <h4 className="font-semibold text-brand-green-600 mb-2 text-base">{day.dayName}</h4>
                     {day.wodType && (
                       <div className="mb-3 bg-orange-50 border border-orange-200 rounded-lg p-3">
                         <div className="flex items-center gap-2 mb-1">
@@ -303,7 +303,7 @@ export default function Routines() {
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="bg-gray-50">
+                          <tr className="bg-brand-cream">
                             <th className="text-left px-3 py-2 font-medium text-gray-600">Ejercicio</th>
                             <th className="text-center px-3 py-2 font-medium text-gray-600">Series</th>
                             <th className="text-center px-3 py-2 font-medium text-gray-600">Reps</th>
@@ -315,7 +315,7 @@ export default function Routines() {
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                           {day.exercises?.sort((a, b) => a.order - b.order).map(ex => (
-                            <tr key={ex.id} className="hover:bg-gray-50">
+                            <tr key={ex.id} className="hover:bg-brand-cream">
                               <td className="px-3 py-2 font-medium">{ex.exercise?.name || 'N/A'}</td>
                               <td className="px-3 py-2 text-center">{ex.sets}</td>
                               <td className="px-3 py-2 text-center">{ex.reps}</td>
@@ -324,7 +324,7 @@ export default function Routines() {
                                 <td className="px-3 py-2 text-center">
                                   <input type="number" value={ex.userWeight || ''} placeholder="-"
                                     onChange={(e) => updateUserWeight(ex.id, e.target.value)}
-                                    className="w-20 text-center border border-gray-300 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" />
+                                    className="w-20 text-center border border-gray-300 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-brand-green-500 outline-none" />
                                 </td>
                               )}
                               <td className="px-3 py-2 text-center">{ex.restSeconds ? `${ex.restSeconds}s` : '-'}</td>
@@ -350,13 +350,13 @@ export default function Routines() {
           <div className="bg-white rounded-xl max-w-sm w-full p-6" onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-semibold mb-4">Asignar "{assignModal.name}" a usuario</h3>
             <select value={assignTo} onChange={e => setAssignTo(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-indigo-500 outline-none">
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-brand-green-500 outline-none">
               <option value="">Seleccionar usuario</option>
               {users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
             </select>
             <div className="flex gap-3">
-              <button onClick={() => setAssignModal(null)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancelar</button>
-              <button onClick={handleAssign} disabled={!assignTo} className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50">Asignar</button>
+              <button onClick={() => setAssignModal(null)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-brand-cream">Cancelar</button>
+              <button onClick={handleAssign} disabled={!assignTo} className="flex-1 bg-brand-green-500 text-white px-4 py-2 rounded-lg hover:bg-brand-green-600 disabled:opacity-50">Asignar</button>
             </div>
           </div>
         </div>
@@ -376,12 +376,12 @@ export default function Routines() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
                   <input type="text" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Asignar a</label>
                   <select value={form.assignedTo} onChange={e => setForm({ ...form, assignedTo: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 outline-none">
                     <option value="">Sin asignar</option>
                     {users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
                   </select>
@@ -390,25 +390,25 @@ export default function Routines() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
                 <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={2}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 outline-none" />
               </div>
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={form.isTemplate} onChange={e => setForm({ ...form, isTemplate: e.target.checked })}
-                  className="w-4 h-4 text-indigo-600 rounded" />
+                  className="w-4 h-4 text-brand-green-500 rounded" />
                 <span className="text-sm font-medium text-gray-700">Guardar como plantilla estándar</span>
               </label>
 
               {/* Days */}
               <div className="space-y-4">
                 {form.days.map((day, dayIdx) => (
-                  <div key={dayIdx} className="border border-gray-200 rounded-lg p-4">
+                  <div key={dayIdx} className="border border-brand-cream-dark rounded-lg p-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <select value={day.dayName} onChange={e => {
                           const days = [...form.days];
                           days[dayIdx].dayName = e.target.value;
                           setForm({ ...form, days });
-                        }} className="font-semibold text-indigo-700 border border-gray-300 rounded px-2 py-1 text-sm">
+                        }} className="font-semibold text-brand-green-600 border border-gray-300 rounded px-2 py-1 text-sm">
                           {dayNames.map(d => <option key={d} value={d}>{d}</option>)}
                         </select>
                       </div>
@@ -469,11 +469,11 @@ export default function Routines() {
                     {/* Exercises in day */}
                     <div className="space-y-2">
                       {day.exercises.map((ex, exIdx) => (
-                        <div key={exIdx} className="flex flex-wrap items-end gap-2 bg-gray-50 p-3 rounded-lg">
+                        <div key={exIdx} className="flex flex-wrap items-end gap-2 bg-brand-cream p-3 rounded-lg">
                           <div className="flex-1 min-w-[200px]">
                             <label className="text-xs text-gray-500">Ejercicio</label>
                             <select value={ex.exerciseId} onChange={e => updateExercise(dayIdx, exIdx, 'exerciseId', e.target.value)}
-                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-brand-green-500 outline-none" required>
                               <option value="">Seleccionar...</option>
                               {exercises.map(e => <option key={e.id} value={e.id}>{e.name} ({e.muscleGroup})</option>)}
                             </select>
@@ -481,27 +481,27 @@ export default function Routines() {
                           <div className="w-16">
                             <label className="text-xs text-gray-500">Series</label>
                             <input type="number" value={ex.sets} onChange={e => updateExercise(dayIdx, exIdx, 'sets', parseInt(e.target.value))}
-                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm text-center focus:ring-2 focus:ring-indigo-500 outline-none" min="1" />
+                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm text-center focus:ring-2 focus:ring-brand-green-500 outline-none" min="1" />
                           </div>
                           <div className="w-20">
                             <label className="text-xs text-gray-500">Reps</label>
                             <input type="text" value={ex.reps} onChange={e => updateExercise(dayIdx, exIdx, 'reps', e.target.value)}
-                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm text-center focus:ring-2 focus:ring-indigo-500 outline-none" />
+                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm text-center focus:ring-2 focus:ring-brand-green-500 outline-none" />
                           </div>
                           <div className="w-20">
                             <label className="text-xs text-gray-500">Peso (kg)</label>
                             <input type="number" value={ex.weight} onChange={e => updateExercise(dayIdx, exIdx, 'weight', parseFloat(e.target.value))}
-                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm text-center focus:ring-2 focus:ring-indigo-500 outline-none" step="0.5" />
+                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm text-center focus:ring-2 focus:ring-brand-green-500 outline-none" step="0.5" />
                           </div>
                           <div className="w-20">
                             <label className="text-xs text-gray-500">Desc. (s)</label>
                             <input type="number" value={ex.restSeconds} onChange={e => updateExercise(dayIdx, exIdx, 'restSeconds', parseInt(e.target.value))}
-                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm text-center focus:ring-2 focus:ring-indigo-500 outline-none" />
+                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm text-center focus:ring-2 focus:ring-brand-green-500 outline-none" />
                           </div>
                           <div className="flex-1 min-w-[120px]">
                             <label className="text-xs text-gray-500">Notas</label>
                             <input type="text" value={ex.notes} onChange={e => updateExercise(dayIdx, exIdx, 'notes', e.target.value)}
-                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" />
+                              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-brand-green-500 outline-none" />
                           </div>
                           <button type="button" onClick={() => removeExercise(dayIdx, exIdx)} className="text-red-500 hover:bg-red-50 p-1.5 rounded">
                             <Trash2 size={14} />
@@ -511,7 +511,7 @@ export default function Routines() {
                     </div>
 
                     <button type="button" onClick={() => addExerciseToDay(dayIdx)}
-                      className="mt-2 flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700">
+                      className="mt-2 flex items-center gap-1 text-sm text-brand-green-500 hover:text-brand-green-600">
                       <Plus size={14} /> Agregar ejercicio
                     </button>
                   </div>
@@ -519,13 +519,13 @@ export default function Routines() {
               </div>
 
               <button type="button" onClick={addDay}
-                className="flex items-center gap-2 text-sm text-indigo-600 border border-indigo-300 px-4 py-2 rounded-lg hover:bg-indigo-50">
+                className="flex items-center gap-2 text-sm text-brand-green-500 border border-brand-green-200 px-4 py-2 rounded-lg hover:bg-brand-green-50">
                 <Plus size={16} /> Agregar día
               </button>
 
               <div className="flex gap-3 pt-4 border-t">
-                <button type="button" onClick={resetBuilder} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50">Cancelar</button>
-                <button type="submit" className="flex-1 bg-indigo-600 text-white px-4 py-2.5 rounded-lg hover:bg-indigo-700 flex items-center justify-center gap-2">
+                <button type="button" onClick={resetBuilder} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-brand-cream">Cancelar</button>
+                <button type="submit" className="flex-1 bg-brand-green-500 text-white px-4 py-2.5 rounded-lg hover:bg-brand-green-600 flex items-center justify-center gap-2">
                   <Save size={18} /> {editing ? 'Guardar Cambios' : 'Crear Rutina'}
                 </button>
               </div>

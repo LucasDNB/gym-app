@@ -23,44 +23,44 @@ export default function Dashboard() {
   if (user.role === 'user') {
     return (
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+        <h1 className="text-2xl font-bold text-brand-green-600 mb-6">
           Hola, {user?.name}
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <Link to="/routines" className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+          <Link to="/routines" className="bg-white rounded-xl shadow-sm border border-brand-cream-dark p-5 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Mi Rutina</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{stats.routines}</p>
+                <p className="text-sm text-brand-green-500">Mi Rutina</p>
+                <p className="text-3xl font-bold text-brand-green-700 mt-1">{stats.routines}</p>
               </div>
-              <div className="bg-green-500 p-3 rounded-lg"><ClipboardList className="text-white" size={24} /></div>
+              <ClipboardList className="text-brand-green-500" size={32} />
             </div>
           </Link>
-          <Link to="/timer" className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+          <Link to="/timer" className="bg-white rounded-xl shadow-sm border border-brand-cream-dark p-5 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Timer</p>
-                <p className="text-lg font-bold text-gray-900 mt-1">HIIT / Tabata</p>
+                <p className="text-sm text-brand-green-500">Timer</p>
+                <p className="text-lg font-bold text-brand-green-700 mt-1">HIIT / Tabata</p>
               </div>
-              <div className="bg-orange-500 p-3 rounded-lg"><Timer className="text-white" size={24} /></div>
+              <Timer className="text-brand-pink-500" size={32} />
             </div>
           </Link>
-          <Link to="/comments" className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+          <Link to="/comments" className="bg-white rounded-xl shadow-sm border border-brand-cream-dark p-5 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Mensajes</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{stats.comments}</p>
+                <p className="text-sm text-brand-green-500">Mensajes</p>
+                <p className="text-3xl font-bold text-brand-green-700 mt-1">{stats.comments}</p>
               </div>
-              <div className="bg-yellow-500 p-3 rounded-lg"><MessageSquare className="text-white" size={24} /></div>
+              <MessageSquare className="text-brand-pink-500" size={32} />
             </div>
           </Link>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold mb-2">Empezar a entrenar</h2>
-          <p className="text-gray-500 mb-4">Revisá tus rutinas asignadas y registrá tus pesos.</p>
-          <Link to="/routines" className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <div className="bg-white rounded-xl shadow-sm border border-brand-cream-dark p-6">
+          <h2 className="text-lg font-semibold text-brand-green-600 mb-2">Empezar a entrenar</h2>
+          <p className="text-brand-green-500 mb-4">Revisa tus rutinas asignadas y registra tus pesos.</p>
+          <Link to="/routines" className="inline-block bg-brand-pink-500 text-white px-6 py-2 rounded-lg hover:bg-brand-pink-600 transition-colors">
             Ver Mi Rutina
           </Link>
         </div>
@@ -70,28 +70,26 @@ export default function Dashboard() {
 
   // Admin/Trainer full dashboard
   const cards = [
-    { label: 'Ejercicios', value: stats.exercises, icon: Dumbbell, to: '/exercises', color: 'bg-blue-500' },
-    { label: 'Rutinas', value: stats.routines, icon: ClipboardList, to: '/routines', color: 'bg-green-500' },
-    { label: 'Mensajes sin leer', value: stats.comments, icon: MessageSquare, to: '/comments', color: 'bg-yellow-500' },
-    { label: 'Usuarios', value: stats.users, icon: Users, to: '/users', color: 'bg-purple-500' },
+    { label: 'Ejercicios', value: stats.exercises, icon: Dumbbell, to: '/exercises', color: 'text-brand-green-500' },
+    { label: 'Rutinas', value: stats.routines, icon: ClipboardList, to: '/routines', color: 'text-brand-green-500' },
+    { label: 'Mensajes sin leer', value: stats.comments, icon: MessageSquare, to: '/comments', color: 'text-brand-pink-500' },
+    { label: 'Usuarios', value: stats.users, icon: Users, to: '/users', color: 'text-brand-pink-500' },
   ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">
-        Bienvenido, {user?.name}
+      <h1 className="text-2xl font-bold text-brand-green-600 mb-6">
+        Bienvenido, <span className="text-brand-pink-500">{user?.role === 'trainer' ? 'Entrenador' : ''} {user?.name}</span>
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {cards.map(({ label, value, icon: Icon, to, color }) => (
-          <Link key={label} to={to} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+          <Link key={label} to={to} className="bg-white rounded-xl shadow-sm border border-brand-cream-dark p-5 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">{label}</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{value}</p>
+                <p className="text-sm text-brand-green-500">{label}</p>
+                <p className="text-3xl font-bold text-brand-green-700 mt-1">{value}</p>
               </div>
-              <div className={`${color} p-3 rounded-lg`}>
-                <Icon className="text-white" size={24} />
-              </div>
+              <Icon className={color} size={32} />
             </div>
           </Link>
         ))}

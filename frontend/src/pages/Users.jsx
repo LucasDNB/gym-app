@@ -25,16 +25,16 @@ export default function Users() {
   };
 
   const roleLabels = { admin: 'Admin', trainer: 'Entrenador', user: 'Usuario' };
-  const roleColors = { admin: 'bg-red-100 text-red-700', trainer: 'bg-blue-100 text-blue-700', user: 'bg-green-100 text-green-700' };
+  const roleColors = { admin: 'bg-brand-pink-50 text-brand-pink-500', trainer: 'bg-brand-green-50 text-brand-green-600', user: 'bg-brand-cream-dark text-brand-green-500' };
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Usuarios</h1>
+      <h1 className="text-2xl font-bold text-brand-green-700 mb-6">Usuarios</h1>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-brand-cream-dark overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-brand-cream border-b border-brand-cream-dark">
               <tr>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Nombre</th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Email</th>
@@ -44,8 +44,8 @@ export default function Users() {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {users.map((u) => (
-                <tr key={u.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">{u.name}</td>
+                <tr key={u.id} className="hover:bg-brand-cream">
+                  <td className="px-6 py-4 text-sm font-medium text-brand-green-700">{u.name}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">{u.email}</td>
                   <td className="px-6 py-4">
                     <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${roleColors[u.role]}`}>
@@ -55,7 +55,7 @@ export default function Users() {
                   <td className="px-6 py-4">
                     {u.role === 'user' ? (
                       <select value={u.trainerId || ''} onChange={(e) => assignTrainer(u.id, e.target.value)}
-                        className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none">
+                        className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-brand-green-500 outline-none">
                         <option value="">Sin asignar</option>
                         {trainers.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                       </select>

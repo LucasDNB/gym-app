@@ -70,10 +70,10 @@ export default function Exercises() {
   return (
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Ejercicios</h1>
+        <h1 className="text-2xl font-bold text-brand-green-700">Ejercicios</h1>
         {canEdit && (
           <button onClick={() => { resetForm(); setShowForm(true); }}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+            className="flex items-center gap-2 bg-brand-green-500 text-white px-4 py-2 rounded-lg hover:bg-brand-green-600 transition-colors">
             <Plus size={18} /> Nuevo Ejercicio
           </button>
         )}
@@ -84,10 +84,10 @@ export default function Exercises() {
         <div className="relative flex-1">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar ejercicio..." className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none" />
+            placeholder="Buscar ejercicio..." className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 focus:border-transparent outline-none" />
         </div>
         <select value={muscleFilter} onChange={(e) => setMuscleFilter(e.target.value)}
-          className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none">
+          className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 focus:border-transparent outline-none">
           <option value="">Todos los grupos</option>
           {muscleGroups.map(g => <option key={g} value={g}>{g}</option>)}
         </select>
@@ -96,7 +96,7 @@ export default function Exercises() {
       {/* Exercise Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {exercises.map((ex) => (
-          <div key={ex.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+          <div key={ex.id} className="bg-white rounded-xl shadow-sm border border-brand-cream-dark overflow-hidden hover:shadow-md transition-shadow">
             <div className="relative h-48 bg-gray-100">
               {ex.imageUrl ? (
                 <img src={ex.imageUrl} alt={ex.name} className="w-full h-full object-cover" />
@@ -110,13 +110,13 @@ export default function Exercises() {
               )}
             </div>
             <div className="p-4">
-              <h3 className="font-semibold text-gray-900">{ex.name}</h3>
-              <span className="inline-block mt-1 text-xs bg-indigo-100 text-indigo-700 rounded-full px-2 py-0.5">{ex.muscleGroup}</span>
+              <h3 className="font-semibold text-brand-green-700">{ex.name}</h3>
+              <span className="inline-block mt-1 text-xs bg-brand-green-50 text-brand-green-600 rounded-full px-2 py-0.5">{ex.muscleGroup}</span>
               {ex.equipment && <p className="text-sm text-gray-500 mt-1">{ex.equipment}</p>}
               {ex.description && <p className="text-sm text-gray-500 mt-1 line-clamp-2">{ex.description}</p>}
               {canEdit && (
                 <div className="flex gap-2 mt-3">
-                  <button onClick={() => startEdit(ex)} className="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded"><Edit2 size={16} /></button>
+                  <button onClick={() => startEdit(ex)} className="text-brand-green-500 hover:bg-brand-green-50 p-1.5 rounded"><Edit2 size={16} /></button>
                   {user.role === 'admin' && <button onClick={() => handleDelete(ex.id)} className="text-red-600 hover:bg-red-50 p-1.5 rounded"><Trash2 size={16} /></button>}
                 </div>
               )}
@@ -154,40 +154,40 @@ export default function Exercises() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
                 <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 outline-none" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Grupo muscular *</label>
                 <input type="text" value={form.muscleGroup} onChange={(e) => setForm({ ...form, muscleGroup: e.target.value })} required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" list="muscle-groups" />
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 outline-none" list="muscle-groups" />
                 <datalist id="muscle-groups">{muscleGroups.map(g => <option key={g} value={g} />)}</datalist>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Equipamiento</label>
                 <input type="text" value={form.equipment} onChange={(e) => setForm({ ...form, equipment: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 outline-none" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
                 <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 outline-none" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Imagen</label>
                 <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])}
-                  className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:font-medium hover:file:bg-indigo-100" />
+                  className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-brand-green-50 file:text-brand-green-600 file:font-medium hover:file:bg-brand-green-100" />
                 <p className="text-xs text-gray-400 mt-1">O URL de imagen:</p>
                 <input type="text" value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none mt-1" placeholder="https://..." />
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 outline-none mt-1" placeholder="https://..." />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">URL de Video (YouTube embed)</label>
                 <input type="text" value={form.videoUrl} onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="https://www.youtube.com/embed/..." />
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green-500 outline-none" placeholder="https://www.youtube.com/embed/..." />
               </div>
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={resetForm} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancelar</button>
-                <button type="submit" className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">{editing ? 'Guardar' : 'Crear'}</button>
+                <button type="submit" className="flex-1 bg-brand-green-500 text-white px-4 py-2 rounded-lg hover:bg-brand-green-600">{editing ? 'Guardar' : 'Crear'}</button>
               </div>
             </form>
           </div>
