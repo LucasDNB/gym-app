@@ -29,7 +29,7 @@ export default function Layout({ children }) {
       {/* Mobile header */}
       <div className="lg:hidden bg-brand-cream border-b border-brand-cream-dark flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2">
-          <img src="/logo.svg" alt="Profe Maca" className="h-10" />
+          <img src="/logo.png" alt="Profe Maca" className="h-10" />
         </div>
         <button onClick={() => setMenuOpen(!menuOpen)} className="text-brand-green-600">
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -40,7 +40,7 @@ export default function Layout({ children }) {
         {/* Sidebar */}
         <aside className={`${menuOpen ? 'block' : 'hidden'} lg:block fixed lg:sticky top-0 left-0 z-40 w-64 h-screen bg-brand-cream border-r border-brand-cream-dark flex-shrink-0`}>
           <div className="hidden lg:flex items-center justify-center px-6 py-5 border-b border-brand-cream-dark">
-            <img src="/logo.svg" alt="Profe Maca" className="h-28" />
+            <img src="/logo.png" alt="Profe Maca" className="h-28" />
           </div>
           <div className="px-4 py-3 border-b border-brand-cream-dark">
             <p className="text-sm text-brand-green-500">Hola,</p>

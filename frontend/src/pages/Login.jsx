@@ -28,7 +28,7 @@ export default function Login() {
     <div className="min-h-screen bg-brand-cream flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 border border-brand-cream-dark">
         <div className="text-center mb-8">
-          <img src="/logo.svg" alt="Profe Maca" className="h-36 mx-auto mb-4" />
+          <img src="/logo.png" alt="Profe Maca" className="h-36 mx-auto mb-4" />
           <p className="text-brand-green-500 mt-1">Inicia sesion en tu cuenta</p>
         </div>
 

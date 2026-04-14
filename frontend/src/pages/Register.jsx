@@ -29,7 +29,7 @@ export default function Register() {
     <div className="min-h-screen bg-brand-cream flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 border border-brand-cream-dark">
         <div className="text-center mb-8">
-          <img src="/logo.svg" alt="Profe Maca" className="h-36 mx-auto mb-4" />
+          <img src="/logo.png" alt="Profe Maca" className="h-36 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-brand-green-600">Crear Cuenta</h1>
         </div>
 
