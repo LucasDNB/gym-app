@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Play, Pause, RotateCcw, Settings, Volume2, VolumeX } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Play, Pause, RotateCcw, Settings, Volume2, VolumeX, X, ClipboardList } from 'lucide-react';
 
 const PRESETS = {
   tabata: { name: 'Tabata', work: 20, rest: 10, rounds: 8, sets: 1, prepTime: 10, description: '20s trabajo / 10s descanso x 8 rondas' },
@@ -38,6 +39,31 @@ function playFinish() {
   setTimeout(() => playBeep(1600, 400, 0.7), 500);
 }
 
+function wodToConfig(wod) {
+  const t = (wod.wodType || '').toUpperCase();
+  const cap = parseInt(wod.wodTimecap) || 0;
+  const rounds = parseInt(wod.wodRounds) || 0;
+
+  if (t.includes('AMRAP')) {
+    const min = cap || 10;
+    return { name: `AMRAP ${min}min`, work: min * 60, rest: 0, rounds: 1, sets: 1, prepTime: 10, description: `As Many Reps As Possible en ${min} min` };
+  }
+  if (t.includes('EMOM')) {
+    const r = rounds || cap || 10;
+    return { name: `EMOM ${r}min`, work: 60, rest: 0, rounds: r, sets: 1, prepTime: 10, description: `Every Minute On the Minute x ${r} min` };
+  }
+  if (t.includes('TABATA')) {
+    const r = rounds || 8;
+    return { name: 'Tabata', work: 20, rest: 10, rounds: r, sets: 1, prepTime: 10, description: `20s trabajo / 10s descanso x ${r} rondas` };
+  }
+  // For Time / RFT / Chipper / Otro → cronómetro ascendente
+  return {
+    name: wod.wodType || 'For Time',
+    work: 0, rest: 0, rounds: 1, sets: 1, prepTime: 3,
+    description: cap ? `Time cap: ${cap} min` : 'Cronómetro ascendente',
+  };
+}
+
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -45,8 +71,13 @@ function formatTime(seconds) {
 }
 
 export default function WorkoutTimer() {
-  const [preset, setPreset] = useState('tabata');
-  const [config, setConfig] = useState(PRESETS.tabata);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const incomingWod = location.state?.wod || null;
+
+  const [wod, setWod] = useState(incomingWod);
+  const [preset, setPreset] = useState(incomingWod ? 'custom' : 'tabata');
+  const [config, setConfig] = useState(incomingWod ? wodToConfig(incomingWod) : PRESETS.tabata);
   const [phase, setPhase] = useState('idle'); // idle, prep, work, rest, finished, counting
   const [timeLeft, setTimeLeft] = useState(0);
   const [totalElapsed, setTotalElapsed] = useState(0);
@@ -64,8 +95,17 @@ export default function WorkoutTimer() {
   const selectPreset = (key) => {
     setPreset(key);
     setConfig({ ...PRESETS[key] });
+    setWod(null);
     reset();
   };
+
+  // Clear router state so a refresh doesn't re-load the WOD
+  useEffect(() => {
+    if (incomingWod) {
+      navigate(location.pathname, { replace: true, state: null });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const reset = useCallback(() => {
     clearInterval(intervalRef.current);
@@ -210,6 +250,40 @@ export default function WorkoutTimer() {
           {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} className="text-gray-400" />}
         </button>
       </div>
+
+      {/* WOD Pizarra */}
+      {wod && (
+        <div className="mb-6 rounded-2xl border-2 border-brand-green-700 bg-[#1f3a2a] text-white shadow-lg overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-2 bg-brand-green-700/80 border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <ClipboardList size={18} />
+              <span className="text-sm font-semibold tracking-wide uppercase">Pizarra del WOD</span>
+            </div>
+            <button onClick={() => setWod(null)} className="p-1 rounded hover:bg-white/10" title="Cerrar pizarra">
+              <X size={16} />
+            </button>
+          </div>
+          <div className="p-5 font-mono">
+            {(wod.routineName || wod.dayName) && (
+              <p className="text-xs uppercase tracking-wider text-brand-cream/70 mb-2">
+                {wod.routineName}{wod.routineName && wod.dayName ? ' • ' : ''}{wod.dayName}
+              </p>
+            )}
+            <div className="flex items-center gap-3 flex-wrap mb-3">
+              <span className="text-2xl font-bold text-brand-pink-500">{wod.wodType}</span>
+              {wod.wodTimecap && (
+                <span className="text-sm bg-white/10 rounded px-2 py-0.5">Time Cap: {wod.wodTimecap} min</span>
+              )}
+              {wod.wodRounds && (
+                <span className="text-sm bg-white/10 rounded px-2 py-0.5">Rondas: {wod.wodRounds}</span>
+              )}
+            </div>
+            {wod.wodContent && (
+              <pre className="whitespace-pre-wrap text-sm sm:text-base leading-relaxed text-brand-cream">{wod.wodContent}</pre>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Preset selector */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2 mb-6">

@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
-import { Plus, X, Trash2, Copy, Download, ChevronDown, ChevronUp, Edit2, Save, FileText, Table, Image } from 'lucide-react';
+import { Plus, X, Trash2, Copy, Download, ChevronDown, ChevronUp, Edit2, Save, FileText, Table, Image, Timer } from 'lucide-react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
@@ -9,6 +10,23 @@ import html2canvas from 'html2canvas';
 
 export default function Routines() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const launchWodTimer = (routine, day) => {
+    navigate('/timer', {
+      state: {
+        wod: {
+          routineName: routine.name,
+          dayName: day.dayName,
+          wodType: day.wodType,
+          wodTimecap: day.wodTimecap,
+          wodRounds: day.wodRounds,
+          wodContent: day.wodContent,
+        },
+      },
+    });
+  };
+
   const [routines, setRoutines] = useState([]);
   const [showBuilder, setShowBuilder] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -291,11 +309,18 @@ export default function Routines() {
                     <h4 className="font-semibold text-brand-green-600 mb-2 text-base">{day.dayName}</h4>
                     {day.wodType && (
                       <div className="mb-3 bg-orange-50 border border-orange-200 rounded-lg p-3">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
                           <span className="text-xs font-bold bg-orange-500 text-white rounded px-2 py-0.5">WOD</span>
                           <span className="text-sm font-semibold text-orange-800">{day.wodType}</span>
                           {day.wodTimecap && <span className="text-xs text-orange-600">Time Cap: {day.wodTimecap} min</span>}
                           {day.wodRounds && <span className="text-xs text-orange-600">Rondas: {day.wodRounds}</span>}
+                          <button
+                            onClick={(e) => { e.stopPropagation(); launchWodTimer(routine, day); }}
+                            className="ml-auto flex items-center gap-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-3 py-1 rounded-lg transition-colors shadow-sm"
+                            title="Iniciar timer con este WOD"
+                          >
+                            <Timer size={14} /> Iniciar Timer
+                          </button>
                         </div>
                         {day.wodContent && <pre className="text-sm text-orange-900 whitespace-pre-wrap font-sans mt-1">{day.wodContent}</pre>}
                       </div>
