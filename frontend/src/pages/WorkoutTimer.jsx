@@ -304,11 +304,44 @@ export default function WorkoutTimer() {
           )}
 
           {/* Round info */}
-          <div className="flex justify-center gap-6 sm:gap-8 text-sm opacity-80 flex-wrap">
-          {!isForTime && <span>Ronda {currentRound} / {config.rounds}</span>}
-          {config.sets > 1 && <span>Serie {currentSet} / {config.sets}</span>}
-          <span>Total: {formatTime(totalElapsed)}</span>
-        </div>
+          <div className="flex justify-center gap-6 sm:gap-8 text-sm opacity-80 flex-wrap mb-5">
+            {!isForTime && <span>Ronda {currentRound} / {config.rounds}</span>}
+            {config.sets > 1 && <span>Serie {currentSet} / {config.sets}</span>}
+            <span>Total: {formatTime(totalElapsed)}</span>
+          </div>
+
+          {/* Integrated controls */}
+          <div className="flex justify-center gap-3 flex-wrap">
+            {phase === 'idle' ? (
+              <button onClick={start}
+                className="flex items-center gap-2 bg-white/95 text-brand-green-700 px-8 py-3 rounded-xl text-lg font-semibold hover:bg-white transition-colors shadow-lg">
+                <Play size={24} /> Iniciar
+              </button>
+            ) : phase === 'finished' ? (
+              <button onClick={reset}
+                className="flex items-center gap-2 bg-white/95 text-brand-green-700 px-8 py-3 rounded-xl text-lg font-semibold hover:bg-white transition-colors shadow-lg">
+                <RotateCcw size={24} /> Reiniciar
+              </button>
+            ) : (
+              <>
+                <button onClick={togglePause}
+                  className="flex items-center gap-2 bg-white/95 text-brand-green-700 px-7 py-3 rounded-xl text-lg font-semibold hover:bg-white transition-colors shadow-lg">
+                  {isRunning ? <><Pause size={24} /> Pausar</> : <><Play size={24} /> Reanudar</>}
+                </button>
+                <button onClick={reset}
+                  className="flex items-center gap-2 bg-red-500/90 text-white px-5 py-3 rounded-xl text-lg font-semibold hover:bg-red-500 transition-colors shadow-lg"
+                  title="Detener / reiniciar">
+                  <RotateCcw size={24} />
+                </button>
+                {isForTime && phase === 'counting' && (
+                  <button onClick={() => { setPhase('finished'); setIsRunning(false); if (soundEnabled) playFinish(); }}
+                    className="flex items-center gap-2 bg-brand-pink-500 text-white px-5 py-3 rounded-xl text-lg font-semibold hover:bg-brand-pink-600 transition-colors shadow-lg">
+                    Terminar
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -322,38 +355,6 @@ export default function WorkoutTimer() {
             {val.name}
           </button>
         ))}
-      </div>
-
-      {/* Controls */}
-      <div className="flex justify-center gap-4 mb-8">
-        {phase === 'idle' ? (
-          <button onClick={start}
-            className="flex items-center gap-2 bg-green-500 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-green-600 transition-colors shadow-lg">
-            <Play size={24} /> Iniciar
-          </button>
-        ) : phase === 'finished' ? (
-          <button onClick={reset}
-            className="flex items-center gap-2 bg-brand-green-500 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-brand-green-600 transition-colors shadow-lg">
-            <RotateCcw size={24} /> Reiniciar
-          </button>
-        ) : (
-          <>
-            <button onClick={togglePause}
-              className={`flex items-center gap-2 ${isRunning ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600'} text-white px-8 py-3 rounded-xl text-lg font-semibold transition-colors shadow-lg`}>
-              {isRunning ? <><Pause size={24} /> Pausar</> : <><Play size={24} /> Reanudar</>}
-            </button>
-            <button onClick={reset}
-              className="flex items-center gap-2 bg-red-500 text-white px-6 py-3 rounded-xl text-lg font-semibold hover:bg-red-600 transition-colors shadow-lg">
-              <RotateCcw size={24} />
-            </button>
-            {isForTime && phase === 'counting' && (
-              <button onClick={() => { setPhase('finished'); setIsRunning(false); if (soundEnabled) playFinish(); }}
-                className="flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-xl text-lg font-semibold hover:bg-purple-700 transition-colors shadow-lg">
-                Terminar
-              </button>
-            )}
-          </>
-        )}
       </div>
 
       {/* Config panel */}
