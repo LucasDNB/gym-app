@@ -251,39 +251,66 @@ export default function WorkoutTimer() {
         </button>
       </div>
 
-      {/* WOD Pizarra */}
-      {wod && (
-        <div className="mb-6 rounded-2xl border-2 border-brand-green-700 bg-[#1f3a2a] text-white shadow-lg overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-2 bg-brand-green-700/80 border-b border-white/10">
-            <div className="flex items-center gap-2">
-              <ClipboardList size={18} />
-              <span className="text-sm font-semibold tracking-wide uppercase">Pizarra del WOD</span>
+      {/* WOD Pizarra + Timer (fill mobile viewport) */}
+      <div className={`flex flex-col gap-2 mb-4 ${wod ? 'min-h-[calc(100dvh-9rem)]' : ''}`}>
+        {wod && (
+          <div className="rounded-2xl border-2 border-brand-green-700 bg-[#1f3a2a] text-white shadow-lg overflow-hidden flex-shrink-0">
+            <div className="flex items-center justify-between px-4 py-1.5 bg-brand-green-700/80 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <ClipboardList size={16} />
+                <span className="text-xs font-semibold tracking-wide uppercase">Pizarra del WOD</span>
+              </div>
+              <button onClick={() => setWod(null)} className="p-1 rounded hover:bg-white/10" title="Cerrar pizarra">
+                <X size={14} />
+              </button>
             </div>
-            <button onClick={() => setWod(null)} className="p-1 rounded hover:bg-white/10" title="Cerrar pizarra">
-              <X size={16} />
-            </button>
-          </div>
-          <div className="p-5 font-mono">
-            {(wod.routineName || wod.dayName) && (
-              <p className="text-xs uppercase tracking-wider text-brand-cream/70 mb-2">
-                {wod.routineName}{wod.routineName && wod.dayName ? ' • ' : ''}{wod.dayName}
-              </p>
-            )}
-            <div className="flex items-center gap-3 flex-wrap mb-3">
-              <span className="text-2xl font-bold text-brand-pink-500">{wod.wodType}</span>
-              {wod.wodTimecap && (
-                <span className="text-sm bg-white/10 rounded px-2 py-0.5">Time Cap: {wod.wodTimecap} min</span>
+            <div className="p-3 sm:p-4 font-mono">
+              {(wod.routineName || wod.dayName) && (
+                <p className="text-[10px] sm:text-xs uppercase tracking-wider text-brand-cream/70 mb-1">
+                  {wod.routineName}{wod.routineName && wod.dayName ? ' • ' : ''}{wod.dayName}
+                </p>
               )}
-              {wod.wodRounds && (
-                <span className="text-sm bg-white/10 rounded px-2 py-0.5">Rondas: {wod.wodRounds}</span>
+              <div className="flex items-center gap-2 flex-wrap mb-2">
+                <span className="text-xl font-bold text-brand-pink-500">{wod.wodType}</span>
+                {wod.wodTimecap && (
+                  <span className="text-xs bg-white/10 rounded px-2 py-0.5">Time Cap: {wod.wodTimecap} min</span>
+                )}
+                {wod.wodRounds && (
+                  <span className="text-xs bg-white/10 rounded px-2 py-0.5">Rondas: {wod.wodRounds}</span>
+                )}
+              </div>
+              {wod.wodContent && (
+                <pre className="whitespace-pre-wrap text-sm sm:text-base leading-snug text-brand-cream">{wod.wodContent}</pre>
               )}
             </div>
-            {wod.wodContent && (
-              <pre className="whitespace-pre-wrap text-sm sm:text-base leading-relaxed text-brand-cream">{wod.wodContent}</pre>
-            )}
           </div>
+        )}
+
+        {/* Timer display */}
+        <div className={`bg-gradient-to-b ${phaseColors[phase]} rounded-2xl p-6 sm:p-8 text-white text-center transition-all duration-500 flex-1 flex flex-col justify-center`}>
+          {/* Phase label */}
+          <p className="text-lg font-medium opacity-80 mb-2">{phaseLabels[phase]}</p>
+
+          {/* Time */}
+          <p className="font-mono font-bold tracking-wider mb-4 leading-none" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.3)', fontSize: 'clamp(5rem, 24vw, 12rem)' }}>
+            {formatTime(timeLeft)}
+          </p>
+
+          {/* Progress bar */}
+          {phase !== 'idle' && phase !== 'finished' && phase !== 'counting' && (
+            <div className="w-full bg-white/20 rounded-full h-2 mb-4">
+              <div className="bg-white rounded-full h-2 transition-all duration-1000" style={{ width: `${progress}%` }} />
+            </div>
+          )}
+
+          {/* Round info */}
+          <div className="flex justify-center gap-6 sm:gap-8 text-sm opacity-80 flex-wrap">
+          {!isForTime && <span>Ronda {currentRound} / {config.rounds}</span>}
+          {config.sets > 1 && <span>Serie {currentSet} / {config.sets}</span>}
+          <span>Total: {formatTime(totalElapsed)}</span>
         </div>
-      )}
+        </div>
+      </div>
 
       {/* Preset selector */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2 mb-6">
@@ -295,31 +322,6 @@ export default function WorkoutTimer() {
             {val.name}
           </button>
         ))}
-      </div>
-
-      {/* Timer display */}
-      <div className={`bg-gradient-to-b ${phaseColors[phase]} rounded-2xl p-8 text-white text-center mb-6 transition-all duration-500`}>
-        {/* Phase label */}
-        <p className="text-lg font-medium opacity-80 mb-2">{phaseLabels[phase]}</p>
-
-        {/* Time */}
-        <p className="text-8xl sm:text-9xl font-mono font-bold tracking-wider mb-4" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>
-          {formatTime(timeLeft)}
-        </p>
-
-        {/* Progress bar */}
-        {phase !== 'idle' && phase !== 'finished' && phase !== 'counting' && (
-          <div className="w-full bg-white/20 rounded-full h-2 mb-4">
-            <div className="bg-white rounded-full h-2 transition-all duration-1000" style={{ width: `${progress}%` }} />
-          </div>
-        )}
-
-        {/* Round info */}
-        <div className="flex justify-center gap-8 text-sm opacity-80">
-          {!isForTime && <span>Ronda {currentRound} / {config.rounds}</span>}
-          {config.sets > 1 && <span>Serie {currentSet} / {config.sets}</span>}
-          <span>Total: {formatTime(totalElapsed)}</span>
-        </div>
       </div>
 
       {/* Controls */}
