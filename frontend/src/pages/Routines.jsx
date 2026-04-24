@@ -344,7 +344,7 @@ export default function Routines() {
                   <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(exportMenuOpen === routine.id ? null : routine.id); }} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
                     <Download size={18} />
                   </button>
-                  <div onClick={(e) => e.stopPropagation()} className={`absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-brand-cream-dark py-1 z-10 min-w-[200px] max-h-[60vh] overflow-y-auto ${exportMenuOpen === routine.id ? 'block' : 'hidden'}`}>
+                  <div onClick={(e) => e.stopPropagation()} className={`absolute left-0 right-auto sm:left-auto sm:right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-brand-cream-dark py-1 z-20 min-w-[200px] max-w-[calc(100vw-2rem)] max-h-[60vh] overflow-y-auto ${exportMenuOpen === routine.id ? 'block' : 'hidden'}`}>
                     <p className="px-3 py-1 text-xs font-medium text-gray-400 uppercase">Semana completa</p>
                     <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(null); exportPDF(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><FileText size={14} /> PDF</button>
                     <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(null); exportExcel(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><Table size={14} /> Excel</button>
