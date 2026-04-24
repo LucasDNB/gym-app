@@ -66,8 +66,8 @@ export default function Layout({ children }) {
         {menuOpen && <div className="lg:hidden fixed inset-0 bg-black/50 z-30" onClick={() => setMenuOpen(false)} />}
 
         {/* Main */}
-        <main className="flex-1 min-h-screen">
-          <div className="p-4 lg:p-8 max-w-7xl mx-auto">
+        <main className="flex-1 min-w-0 min-h-screen">
+          <div className="p-4 lg:p-8 max-w-7xl mx-auto w-full">
             {children}
           </div>
         </main>
