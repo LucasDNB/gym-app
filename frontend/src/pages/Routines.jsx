@@ -348,7 +348,6 @@ export default function Routines() {
                     <p className="px-3 py-1 text-xs font-medium text-gray-400 uppercase">Semana completa</p>
                     <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(null); exportPDF(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><FileText size={14} /> PDF</button>
                     <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(null); exportExcel(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><Table size={14} /> Excel</button>
-                    <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(null); exportJPG(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><Image size={14} /> JPG</button>
                     {routine.days?.length > 0 && (
                       <>
                         <hr className="my-1" />
