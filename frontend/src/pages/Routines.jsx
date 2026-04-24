@@ -326,13 +326,13 @@ export default function Routines() {
             className="bg-white rounded-xl shadow-sm border border-brand-cream-dark overflow-hidden">
             <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer"
               onClick={() => setExpandedRoutine(expandedRoutine === routine.id ? null : routine.id)}>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0 w-full">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-semibold text-brand-green-700 text-lg">{routine.name}</h3>
+                  <h3 className="font-semibold text-brand-green-700 text-lg break-words">{routine.name}</h3>
                   {routine.isTemplate && <span className="text-xs bg-amber-100 text-amber-700 rounded-full px-2 py-0.5">Plantilla</span>}
                 </div>
-                {routine.description && <p className="text-sm text-gray-500 mt-1">{routine.description}</p>}
-                <div className="flex gap-4 mt-2 text-sm text-gray-500">
+                {routine.description && <p className="text-sm text-gray-500 mt-1 break-words">{routine.description}</p>}
+                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm text-gray-500">
                   {routine.creator && <span>Por: {routine.creator.name}</span>}
                   {routine.assignee && <span>Para: {routine.assignee.name}</span>}
                   <span>{routine.days?.length || 0} días</span>
@@ -395,20 +395,20 @@ export default function Routines() {
                     <h4 className="font-semibold text-brand-green-600 mb-2 text-base">{day.dayName}</h4>
                     {day.wodType && (
                       <div className="mb-3 bg-orange-50 border border-orange-200 rounded-lg p-3">
-                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
                           <span className="text-xs font-bold bg-orange-500 text-white rounded px-2 py-0.5">WOD</span>
                           <span className="text-sm font-semibold text-orange-800">{day.wodType}</span>
                           {day.wodTimecap && <span className="text-xs text-orange-600">Time Cap: {day.wodTimecap} min</span>}
                           {day.wodRounds && <span className="text-xs text-orange-600">Rondas: {day.wodRounds}</span>}
-                          <button
-                            onClick={(e) => { e.stopPropagation(); launchWodTimer(routine, day); }}
-                            className="ml-auto flex items-center gap-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-3 py-1 rounded-lg transition-colors shadow-sm"
-                            title="Iniciar timer con este WOD"
-                          >
-                            <Timer size={14} /> Iniciar Timer
-                          </button>
                         </div>
-                        {day.wodContent && <pre className="text-sm text-orange-900 whitespace-pre-wrap font-sans mt-1">{day.wodContent}</pre>}
+                        <button
+                          onClick={(e) => { e.stopPropagation(); launchWodTimer(routine, day); }}
+                          className="w-full sm:w-auto sm:float-right flex items-center justify-center gap-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors shadow-sm mb-2 sm:mb-0 sm:ml-3"
+                          title="Iniciar timer con este WOD"
+                        >
+                          <Timer size={14} /> Iniciar Timer
+                        </button>
+                        {day.wodContent && <pre className="text-sm text-orange-900 whitespace-pre-wrap font-sans clear-both">{day.wodContent}</pre>}
                       </div>
                     )}
                     <div className="overflow-x-auto">

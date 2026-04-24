@@ -20,7 +20,8 @@
   --color-brand-cream-dark: #F5EBDA;
 }
 
-body {
+html, body {
   margin: 0;
+  overflow-x: hidden;
   font-family: system-ui, -apple-system, sans-serif;
 }
