@@ -4,7 +4,7 @@ import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { Plus, X, Trash2, Copy, Download, ChevronDown, ChevronUp, Edit2, Save, FileText, Table, Image, Timer } from 'lucide-react';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 
@@ -36,7 +36,15 @@ export default function Routines() {
   const [exportRoutine, setExportRoutine] = useState(null);
   const [assignModal, setAssignModal] = useState(null);
   const [assignTo, setAssignTo] = useState('');
+  const [exportMenuOpen, setExportMenuOpen] = useState(null);
   const routineRef = useRef(null);
+
+  useEffect(() => {
+    const onDocClick = () => setExportMenuOpen(null);
+    document.addEventListener('click', onDocClick);
+    return () => document.removeEventListener('click', onDocClick);
+  }, []);
+
   const canEdit = ['admin', 'trainer'].includes(user?.role);
 
   const [form, setForm] = useState({
@@ -146,63 +154,141 @@ export default function Routines() {
   };
 
   // Export functions
+  const safeName = (s) => (s || 'Rutina').replace(/[\\/:*?"<>|]/g, '_').substring(0, 80);
+
   const exportPDF = (routine, dayFilter = null) => {
     const doc = new jsPDF();
     doc.setFontSize(18);
     doc.text(routine.name, 14, 20);
-    if (routine.description) { doc.setFontSize(10); doc.text(routine.description, 14, 28); }
+    let y = 28;
+    if (routine.description) { doc.setFontSize(10); doc.text(routine.description, 14, y); y += 8; }
 
-    let y = 35;
-    const days = dayFilter ? routine.days.filter(d => d.dayName === dayFilter) : routine.days;
+    const allDays = (routine.days || []).slice().sort((a, b) => (a.dayOrder || 0) - (b.dayOrder || 0));
+    const days = dayFilter ? allDays.filter(d => d.dayName === dayFilter) : allDays;
 
-    days.sort((a, b) => a.dayOrder - b.dayOrder).forEach(day => {
+    if (days.length === 0) {
+      doc.setFontSize(12);
+      doc.text('Esta rutina no tiene dias cargados.', 14, y + 4);
+    }
+
+    days.forEach((day, idx) => {
+      if (idx > 0) y = doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : y + 10;
+      if (y > 260) { doc.addPage(); y = 20; }
+
       doc.setFontSize(14);
-      doc.text(day.dayName, 14, y);
-      y += 5;
+      doc.setTextColor(46, 125, 50);
+      doc.text(day.dayName || `Dia ${idx + 1}`, 14, y);
+      doc.setTextColor(0, 0, 0);
+      y += 4;
 
-      const rows = day.exercises.sort((a, b) => a.order - b.order).map(ex => [
-        ex.exercise?.name || 'N/A',
-        ex.sets,
-        ex.reps,
-        ex.weight ? `${ex.weight} kg` : '-',
-        ex.userWeight ? `${ex.userWeight} kg` : '-',
-        ex.restSeconds ? `${ex.restSeconds}s` : '-',
-        ex.notes || ''
-      ]);
+      // WOD block
+      if (day.wodType) {
+        doc.setFontSize(10);
+        const wodHeader = `WOD - ${day.wodType}` +
+          (day.wodTimecap ? ` | Time Cap: ${day.wodTimecap} min` : '') +
+          (day.wodRounds ? ` | Rondas: ${day.wodRounds}` : '');
+        doc.setTextColor(194, 24, 91);
+        doc.text(wodHeader, 14, y + 4);
+        doc.setTextColor(0, 0, 0);
+        y += 8;
+        if (day.wodContent) {
+          const lines = doc.splitTextToSize(day.wodContent, 180);
+          doc.text(lines, 14, y + 2);
+          y += lines.length * 5 + 2;
+        }
+      }
 
-      doc.autoTable({
-        startY: y,
-        head: [['Ejercicio', 'Series', 'Reps', 'Peso', 'Mi Peso', 'Descanso', 'Notas']],
-        body: rows,
-        theme: 'striped',
-        headStyles: { fillColor: [46, 125, 50] },
-        margin: { left: 14 },
-      });
-      y = doc.lastAutoTable.finalY + 10;
+      const exercises = (day.exercises || []).slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+      if (exercises.length > 0) {
+        const rows = exercises.map(ex => [
+          ex.exercise?.name || 'N/A',
+          String(ex.sets ?? '-'),
+          String(ex.reps ?? '-'),
+          ex.weight ? `${ex.weight} kg` : '-',
+          ex.userWeight ? `${ex.userWeight} kg` : '-',
+          ex.restSeconds ? `${ex.restSeconds}s` : '-',
+          ex.notes || ''
+        ]);
+
+        autoTable(doc, {
+          startY: y + 2,
+          head: [['Ejercicio', 'Series', 'Reps', 'Peso', 'Mi Peso', 'Descanso', 'Notas']],
+          body: rows,
+          theme: 'striped',
+          headStyles: { fillColor: [46, 125, 50] },
+          styles: { fontSize: 9 },
+          margin: { left: 14, right: 14 },
+        });
+      } else if (!day.wodType) {
+        doc.setFontSize(10);
+        doc.setTextColor(120, 120, 120);
+        doc.text('Sin ejercicios cargados.', 14, y + 6);
+        doc.setTextColor(0, 0, 0);
+        // bump y manually since no autotable was added
+        doc.lastAutoTable = { finalY: y + 6 };
+      } else {
+        doc.lastAutoTable = { finalY: y };
+      }
     });
 
-    doc.save(`${routine.name}${dayFilter ? ` - ${dayFilter}` : ''}.pdf`);
+    doc.save(`${safeName(routine.name)}${dayFilter ? ` - ${dayFilter}` : ''}.pdf`);
   };
 
   const exportExcel = (routine, dayFilter = null) => {
     const wb = XLSX.utils.book_new();
-    const days = dayFilter ? routine.days.filter(d => d.dayName === dayFilter) : routine.days;
+    const allDays = (routine.days || []).slice().sort((a, b) => (a.dayOrder || 0) - (b.dayOrder || 0));
+    const days = dayFilter ? allDays.filter(d => d.dayName === dayFilter) : allDays;
 
-    days.sort((a, b) => a.dayOrder - b.dayOrder).forEach(day => {
-      const data = day.exercises.sort((a, b) => a.order - b.order).map(ex => ({
-        'Ejercicio': ex.exercise?.name || 'N/A',
-        'Series': ex.sets,
-        'Repeticiones': ex.reps,
-        'Peso (kg)': ex.weight || '',
-        'Mi Peso (kg)': ex.userWeight || '',
-        'Descanso (s)': ex.restSeconds || '',
-        'Notas': ex.notes || '',
-      }));
-      const ws = XLSX.utils.json_to_sheet(data);
-      XLSX.utils.book_append_sheet(wb, ws, day.dayName.substring(0, 31));
+    if (days.length === 0) {
+      const ws = XLSX.utils.aoa_to_sheet([
+        [routine.name],
+        [routine.description || ''],
+        [],
+        ['Esta rutina no tiene dias cargados.'],
+      ]);
+      XLSX.utils.book_append_sheet(wb, ws, 'Rutina');
+      XLSX.writeFile(wb, `${safeName(routine.name)}.xlsx`);
+      return;
+    }
+
+    days.forEach((day, idx) => {
+      const aoa = [
+        [routine.name],
+        [routine.description || ''],
+        [day.dayName],
+      ];
+      if (day.wodType) {
+        aoa.push([]);
+        aoa.push([`WOD: ${day.wodType}`,
+          day.wodTimecap ? `Time Cap: ${day.wodTimecap} min` : '',
+          day.wodRounds ? `Rondas: ${day.wodRounds}` : '']);
+        if (day.wodContent) aoa.push([day.wodContent]);
+      }
+      aoa.push([]);
+      aoa.push(['Ejercicio', 'Series', 'Repeticiones', 'Peso (kg)', 'Mi Peso (kg)', 'Descanso (s)', 'Notas']);
+      const exercises = (day.exercises || []).slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+      if (exercises.length === 0) {
+        aoa.push(['Sin ejercicios cargados']);
+      } else {
+        exercises.forEach(ex => {
+          aoa.push([
+            ex.exercise?.name || 'N/A',
+            ex.sets ?? '',
+            ex.reps ?? '',
+            ex.weight ?? '',
+            ex.userWeight ?? '',
+            ex.restSeconds ?? '',
+            ex.notes || '',
+          ]);
+        });
+      }
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      ws['!cols'] = [{ wch: 28 }, { wch: 8 }, { wch: 14 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 30 }];
+      const sheetName = (day.dayName || `Dia ${idx + 1}`).substring(0, 31);
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
     });
 
-    XLSX.writeFile(wb, `${routine.name}${dayFilter ? ` - ${dayFilter}` : ''}.xlsx`);
+    XLSX.writeFile(wb, `${safeName(routine.name)}${dayFilter ? ` - ${dayFilter}` : ''}.xlsx`);
   };
 
   const exportJPG = async (routine) => {
@@ -254,15 +340,15 @@ export default function Routines() {
               </div>
               <div className="flex items-center gap-2">
                 {/* Export dropdown */}
-                <div className="relative group">
-                  <button onClick={(e) => e.stopPropagation()} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
+                <div className="relative">
+                  <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(exportMenuOpen === routine.id ? null : routine.id); }} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
                     <Download size={18} />
                   </button>
-                  <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-brand-cream-dark py-1 hidden group-hover:block z-10 min-w-[200px]">
+                  <div onClick={(e) => e.stopPropagation()} className={`absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-brand-cream-dark py-1 z-10 min-w-[200px] max-h-[60vh] overflow-y-auto ${exportMenuOpen === routine.id ? 'block' : 'hidden'}`}>
                     <p className="px-3 py-1 text-xs font-medium text-gray-400 uppercase">Semana completa</p>
-                    <button onClick={(e) => { e.stopPropagation(); exportPDF(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><FileText size={14} /> PDF</button>
-                    <button onClick={(e) => { e.stopPropagation(); exportExcel(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><Table size={14} /> Excel</button>
-                    <button onClick={(e) => { e.stopPropagation(); exportJPG(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><Image size={14} /> JPG</button>
+                    <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(null); exportPDF(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><FileText size={14} /> PDF</button>
+                    <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(null); exportExcel(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><Table size={14} /> Excel</button>
+                    <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(null); exportJPG(routine); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-cream"><Image size={14} /> JPG</button>
                     {routine.days?.length > 0 && (
                       <>
                         <hr className="my-1" />
@@ -273,7 +359,7 @@ export default function Routines() {
                             <div className="flex gap-1 ml-2">
                               <button onClick={(e) => { e.stopPropagation(); exportPDF(routine, day.dayName); }} className="text-xs text-brand-green-500 hover:underline">PDF</button>
                               <span className="text-gray-300">|</span>
-                              <button onClick={(e) => { e.stopPropagation(); exportExcel(routine, day.dayName); }} className="text-xs text-brand-green-500 hover:underline">Excel</button>
+                              <button onClick={(e) => { e.stopPropagation(); setExportMenuOpen(null); exportExcel(routine, day.dayName); }} className="text-xs text-brand-green-500 hover:underline">Excel</button>
                             </div>
                           </div>
                         ))}

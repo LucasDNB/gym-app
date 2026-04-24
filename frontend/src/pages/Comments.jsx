@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
-import { Send, Check, CheckCheck } from 'lucide-react';
+import { Send, Check, CheckCheck, ArrowLeft } from 'lucide-react';
 
 export default function Comments() {
   const { user } = useAuth();
@@ -59,9 +59,9 @@ export default function Comments() {
     <div>
       <h1 className="text-2xl font-bold text-brand-green-700 mb-6">Mensajes</h1>
 
-      <div className="bg-white rounded-xl shadow-sm border border-brand-cream-dark overflow-hidden flex" style={{ height: '70vh' }}>
+      <div className="bg-white rounded-xl shadow-sm border border-brand-cream-dark overflow-hidden flex h-[calc(100dvh-13rem)] sm:h-[70vh]">
         {/* Contact list */}
-        <div className="w-64 border-r border-brand-cream-dark flex-shrink-0 overflow-y-auto">
+        <div className={`w-full sm:w-64 border-r border-brand-cream-dark flex-shrink-0 overflow-y-auto ${selectedContact ? 'hidden sm:block' : 'block'}`}>
           <div className="p-3 border-b border-brand-cream-dark">
             <p className="text-sm font-medium text-gray-500">Contactos</p>
           </div>
@@ -90,10 +90,13 @@ export default function Comments() {
         </div>
 
         {/* Chat area */}
-        <div className="flex-1 flex flex-col">
+        <div className={`flex-1 flex-col ${selectedContact ? 'flex' : 'hidden sm:flex'}`}>
           {selectedContact ? (
             <>
-              <div className="px-4 py-3 border-b border-brand-cream-dark bg-brand-cream">
+              <div className="px-4 py-3 border-b border-brand-cream-dark bg-brand-cream flex items-center gap-2">
+                <button onClick={() => setSelectedContact(null)} className="sm:hidden p-1 -ml-1 text-brand-green-600" aria-label="Volver">
+                  <ArrowLeft size={20} />
+                </button>
                 <p className="font-medium text-brand-green-700">{selectedContact.name}</p>
               </div>
 

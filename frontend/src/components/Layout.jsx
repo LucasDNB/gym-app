@@ -27,11 +27,12 @@ export default function Layout({ children }) {
   return (
     <div className="min-h-screen bg-brand-cream">
       {/* Mobile header */}
-      <div className="lg:hidden bg-brand-cream border-b border-brand-cream-dark flex items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-2">
+      <div className="lg:hidden bg-brand-cream border-b border-brand-cream-dark flex items-center justify-between px-4 py-3 sticky top-0 z-30">
+        <button onClick={() => setMenuOpen(!menuOpen)} className="flex items-center gap-2 -ml-1 p-1 rounded-lg active:bg-brand-cream-dark transition-colors" aria-label="Abrir menu">
           <img src="/logo.png" alt="Profe Maca" className="h-10" />
-        </div>
-        <button onClick={() => setMenuOpen(!menuOpen)} className="text-brand-green-600">
+          <span className="font-semibold text-brand-pink-500 text-sm">Profe Maca</span>
+        </button>
+        <button onClick={() => setMenuOpen(!menuOpen)} className="text-brand-green-600 p-1" aria-label="Toggle menu">
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
